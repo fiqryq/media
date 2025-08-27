@@ -1,0 +1,44 @@
+name: "Sync to Cloudflare R2"
+
+on:
+  push:
+    paths:
+      - "cdn/**"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_BUCKET: assets
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install AWS CLI
+        run: |
+          pipx install awscli
+
+      - name: Sync to R2 (add/update/delete)
+        run: |
+          aws s3 sync cdn s3://"$R2_BUCKET" \
+            --endpoint-url "https://$R2_ACCOUNT_ID.r2.cloudflarestorage.com" \
+            --delete
+
+      - name: Set Cache-Control for images (immutable)
+        shell: bash
+        run: |
+          shopt -s globstar nullglob
+          for f in cdn/**/*.{png,jpg,jpeg,webp,avif,svg,gif}; do
+            key="${f#cdn/}"
+            mime=$(file --mime-type -b "$f")
+            aws s3 cp "$f" "s3://$R2_BUCKET/$key" \
+              --endpoint-url "https://$R2_ACCOUNT_ID.r2.cloudflarestorage.com" \
+              --content-type "$mime" \
+              --cache-control "public, max-age=31536000, immutable" \
+              --metadata-directive REPLACE
+          done
