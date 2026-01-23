@@ -9,7 +9,7 @@
 
 
 # Summary
-Software engineer based in Jakarta with 4+ years of experience. I engineer scalable web applications specializing in the React and Node.js ecosystems. Proven track record of thriving in remote environments and distributed teams. Passionate about exploring emerging technologies and continuously elevating my craft. Let's connect!
+Frontend Engineer with 4+ years of experience building modern, responsive web applications. Skilled in React, Next.js, and TypeScript, with a strong focus on clean architecture, reusable components, and performance optimization. Dedicated to crafting intuitive user experiences and writing maintainable code. Experienced in agile, sprint-based teams, tackling complex UI challenges, improving accessibility, and delivering products that provide real user value.
 
 # Experience
 ## **Frontend Engineer**, Kitabisa.com -- Jakarta , Indonesia (Remote)
